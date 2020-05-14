@@ -109,7 +109,9 @@ delete_obsolete_volumes() {
         cd "$POOLDIR"
         for i in *; do
             echo "list volume=$i" | bconsole | if grep --quiet "No results to list"; then
-                echo "$i is ready to be deleted"  
+	    	volsize=$(du -hs $i | awk '{print $1}')
+		vollastmod=$(stat -c %y $i)
+                echo "$i is ready to be deleted. Size $volsize - Last modification: $vollastmod"  
                 echo "$POOLDIR/$i" >> $VOLUMES_TO_DELETE
             fi
         done
